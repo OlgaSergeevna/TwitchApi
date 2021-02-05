@@ -1,14 +1,15 @@
 package com.sylko.twitchapi.ui
 
-import com.sylko.twitchapi.entities.GameEntity
-import com.sylko.twitchapi.adapters.GamesAdapter
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sylko.twitchapi.R
+import com.sylko.twitchapi.adapters.GamesAdapter
 import com.sylko.twitchapi.databinding.FragmentGamesBinding
+import com.sylko.twitchapi.entities.GameEntity
 
 class GamesFragment: Fragment(R.layout.fragment_games){
 
@@ -24,10 +25,11 @@ class GamesFragment: Fragment(R.layout.fragment_games){
         recyclerView = binding.rvGames
 
         observeLiveData()
+
     }
 
     private fun observeLiveData(){
-        viewModel = ViewModelProvider(this).get(GamesViewModel::class.java)
+       viewModel = ViewModelProvider(this).get(GamesViewModel::class.java)
 
         viewModel.games.observe(viewLifecycleOwner, {
             initAdapter(it)
