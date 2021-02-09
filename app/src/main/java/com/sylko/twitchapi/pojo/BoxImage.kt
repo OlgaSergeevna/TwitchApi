@@ -8,5 +8,4 @@ data class BoxImage(
     @SerializedName("large")
     @Expose
     val large: String?
-
 )

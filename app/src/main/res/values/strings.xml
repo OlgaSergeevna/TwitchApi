@@ -2,4 +2,8 @@
     <string name="app_name">TwitchApi</string>
     <string name="channels">Каналы:</string>
     <string name="viewers">Зрители:</string>
+    <string name="review">Оставить отзыв</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="send_review">Отправить</string>
+    <string name="text_comment">Текст комментария</string>
 </resources>

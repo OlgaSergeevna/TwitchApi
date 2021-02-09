@@ -12,5 +12,4 @@ data class TopListOfData(
     @SerializedName("_total")
     @Expose
     val _total : Int?
-
 )

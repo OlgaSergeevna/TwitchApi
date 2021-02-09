@@ -16,5 +16,4 @@ data class TopGames(
     @SerializedName("game")
     @Expose
     val game: Game
-
 )
