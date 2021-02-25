@@ -11,7 +11,6 @@ import com.sylko.twitchapi.R
 import com.sylko.twitchapi.databinding.ItemGameBinding
 import com.sylko.twitchapi.entities.GameEntity
 
-
 class GamesAdapter : PagedListAdapter<GameEntity, GamesAdapter.ViewHolder>(gameDiff) {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {

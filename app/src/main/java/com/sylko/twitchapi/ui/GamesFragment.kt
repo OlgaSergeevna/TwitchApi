@@ -2,7 +2,6 @@ package com.sylko.twitchapi.ui
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sylko.twitchapi.R
 import com.sylko.twitchapi.adapters.GamesAdapter
 import com.sylko.twitchapi.databinding.FragmentGamesBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 class GamesFragment: Fragment(R.layout.fragment_games){
 
@@ -62,20 +60,11 @@ class GamesFragment: Fragment(R.layout.fragment_games){
     }
 
     private fun subscribeToList() {
-        val disposable = viewModel.gameList
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { list ->
-                    adapter.submitList(list)
-                    if (recyclerState != null) {
-                        recyclerView.layoutManager?.onRestoreInstanceState(recyclerState)
-                        recyclerState = null
-                    }
-                },
-                { e ->
-                    Log.e("NGVL", "Error", e)
-                }
-            )
+
+        viewModel.userList?.observe(viewLifecycleOwner, { pagedList ->
+            adapter.submitList(pagedList)
+        })
+
     }
 
 }

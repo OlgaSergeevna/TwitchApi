@@ -1,39 +1,42 @@
 package com.sylko.twitchapi.ui
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import androidx.paging.RxPagedListBuilder
 import com.sylko.twitchapi.api.ApiService
+import com.sylko.twitchapi.database.AppDatabase
 import com.sylko.twitchapi.entities.GameEntity
-import com.sylko.twitchapi.paging.FeedDataFactory
-import io.reactivex.Observable
+import com.sylko.twitchapi.paging.GamesBoundaryCallback
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
-class GamesViewModel : ViewModel() {
+class GamesViewModel(application: Application): AndroidViewModel(application) {
 
-    var gameList: Observable<PagedList<GameEntity>>
-    private val compositeDisposable = CompositeDisposable()
-    private val pagedSize = 20
-    private val sourceFactory: FeedDataFactory
+    private val db = AppDatabase.getInstance(application)
+    private var gamesBoundaryCallback: GamesBoundaryCallback? = null
+    var userList: LiveData<PagedList<GameEntity>>? = null
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     init {
-        sourceFactory = FeedDataFactory(
-            compositeDisposable,
-            ApiService.getService()
+        gamesBoundaryCallback = GamesBoundaryCallback(
+                ApiService.getService(),
+                application,
+            compositeDisposable
         )
 
-        val config = PagedList.Config.Builder()
-            .setPageSize(pagedSize)
-            .setInitialLoadSizeHint(pagedSize * 3)
-            .setPrefetchDistance(10)
-            .setEnablePlaceholders(false)
-            .build()
+        val pagedListConfig = PagedList.Config.Builder()
+                .setPrefetchDistance(10)
+                .setPageSize(10)
+                .setInitialLoadSizeHint(30)
+                .setEnablePlaceholders(false)
+                .build()
 
-        gameList = RxPagedListBuilder(sourceFactory, config)
-            .setFetchScheduler(Schedulers.io())
-            .buildObservable()
-            .cache()
+        userList = LivePagedListBuilder(
+                db.gameDao().getGames(),
+                pagedListConfig
+        ).setBoundaryCallback(gamesBoundaryCallback)
+                .build()
     }
 
     override fun onCleared() {
